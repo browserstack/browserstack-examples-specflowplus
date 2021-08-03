@@ -3,7 +3,7 @@
   "username": "BrowserStack_Username",
   "access_key": "BrowserStack_AccessKey",
   "commonCapabilities": {
-    "build": "browserstack-examples-specflow",
+    "build":"BROWSERSTACK_BUILD_NAME",
     "project": "Demo BrowserStack"
   },
   "single": [

@@ -20,6 +20,7 @@ namespace SpecflowBrowserStack.Drivers
         string remoteUrl = "";
         private FeatureContext _featureContext;
         private ScenarioContext _scenarioContext;
+        String buildName="";
 
         public BrowserSeleniumDriverFactory(ConfigurationDriver configurationDriver, TestRunContext testRunContext, FeatureContext featureContext, ScenarioContext scenarioContext)
         {
@@ -58,7 +59,18 @@ namespace SpecflowBrowserStack.Drivers
             // Set common capabilities like "browserstack.local", project, name, session
             foreach (var tuple in _configurationDriver.CommonCapabilities)
             {
-                caps.SetCapability(tuple.Key.ToString(), tuple.Value.ToString());
+                if (tuple.Key.ToString() == "build")
+                    {
+                        buildName = Environment.GetEnvironmentVariable("BROWSERSTACK_BUILD_NAME");
+                        if (buildName == null || buildName == "")
+                        {
+                            buildName = "browserStack-examples-Specflow";
+                        }
+                        caps.SetCapability(tuple.Key.ToString(), buildName);
+                    }
+               else{
+                   caps.SetCapability(tuple.Key.ToString(), tuple.Value.ToString());
+               }
             }
             if (browserId == 0)
             {
@@ -184,8 +196,10 @@ namespace SpecflowBrowserStack.Drivers
                         Local _local = new Local();
                         List<KeyValuePair<string, string>> bsLocalArgs = new List<KeyValuePair<string, string>>() {
                         new KeyValuePair<string, string>("key", access_key),
-                        new KeyValuePair<string, string>("local-identifier", "identifier-unique-name"+i.ToString())
-                        
+                        new KeyValuePair<string, string>("local-identifier", "identifier-unique-name"+i.ToString()),
+                            
+                        //Set the binary path,when running from Mac
+                        //new KeyValuePair<string, string>("binarypath", "/Path/BrowserStackLocal"),     
                     };
                         _local.start(bsLocalArgs);
                         return _local;
